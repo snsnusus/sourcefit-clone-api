@@ -1,0 +1,21 @@
+## .NET build output
+bin/
+obj/
+
+## User-specific files
+*.user
+*.suo
+
+## Rider/VS/VSCode
+.vs/
+.vscode/
+.idea/
+
+## Secrets — belt and suspenders, even though User Secrets already lives outside the repo
+appsettings.*.json
+!appsettings.json
+!appsettings.Development.json
+*.pfx
+
+## Docker
+docker-compose.override.yml

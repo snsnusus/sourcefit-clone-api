@@ -1,0 +1,16 @@
+# docker-compose.yml
+services:
+  postgres:
+    image: postgres:17
+    container_name: sourcefitclone-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: localdevpassword
+      POSTGRES_DB: SourcefitClone
+    ports:
+      - "5432:5432"
+    volumes:
+      - sourcefitclone-pgdata:/var/lib/postgresql/data
+
+volumes:
+  sourcefitclone-pgdata:
