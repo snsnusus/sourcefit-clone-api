@@ -19,8 +19,8 @@ jobs:
 
       - name: Restore dependencies
         run: dotnet restore
-        working-directory: sourcefit-clone-api
+        working-directory: SourcefitClone.Api
 
       - name: Build
         run: dotnet build --no-restore --configuration Release
-        working-directory: sourcefit-clone-api
+        working-directory: SourcefitClone.Api
