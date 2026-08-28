@@ -33,7 +33,7 @@ public class EmployeesController(EmployeeService employeeService) : ControllerBa
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<EmployeeResponseDto>> Update(int id, EmployeeCreateDto dto)
+    public async Task<ActionResult<EmployeeResponseDto>> Update(int id, EmployeeUpdateDto dto)
     {
         var updated = await _employeeService.UpdateAsync(id, dto);
         if (updated is null) return NotFound();

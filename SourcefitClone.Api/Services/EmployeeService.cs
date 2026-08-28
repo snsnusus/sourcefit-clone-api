@@ -70,7 +70,7 @@ public class EmployeeService(AppDbContext context)
             ?? throw new InvalidOperationException("Failed to reload newly created employee.");
     }
 
-    public async Task<EmployeeResponseDto?> UpdateAsync(int id, EmployeeCreateDto dto)
+    public async Task<EmployeeResponseDto?> UpdateAsync(int id, EmployeeUpdateDto dto)
     {
         var employee = await _context.Employees.FindAsync(id);
         if (employee is null) return null;
