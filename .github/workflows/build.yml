@@ -1,8 +1,6 @@
 name: Build
 
 on:
-  push:
-    branches: [sit, qa, prerelease, master]
   pull_request:
     branches: [sit, qa, prerelease, master]
 
