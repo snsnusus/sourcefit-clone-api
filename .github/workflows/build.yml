@@ -2,9 +2,9 @@ name: Build
 
 on:
   push:
-    branches: [main]
+    branches: [sit, qa, prerelease, master]
   pull_request:
-    branches: [main]
+    branches: [sit, qa, prerelease, master]
 
 jobs:
   build:
@@ -16,6 +16,8 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "10.0.x"
+          cache: true
+          cache-dependency-path: "**/*.csproj"
 
       - name: Restore dependencies
         run: dotnet restore
