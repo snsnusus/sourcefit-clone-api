@@ -4,26 +4,19 @@ namespace SourcefitClone.Api.Models;
 
 public class Employee
 {
-    public int Id {get; set;}
-
+    public int Id { get; set; }
     [Required]
     [MaxLength(100)]
     public string FirstName { get; set; } = string.Empty;
-
     [MaxLength(100)]
     public string? MiddleName { get; set; }
-
     [Required]
     [MaxLength(100)]
     public string LastName { get; set; } = string.Empty;
-
     [MaxLength(20)]
     public string? Suffix { get; set; }
-
     public string? Nickname { get; set; }
-
     public required string Gender { get; set; }
-
     public DateOnly Birthdate { get; set; }
     public string? Birthplace { get; set; }
     public required string MaritalStatus { get; set; }
@@ -40,6 +33,6 @@ public class Employee
     // Never store plain text — we'll wire this up to a real hash next
     [Required]
     public string PasswordHash { get; set; } = string.Empty;
-
     public DateTime? DeletedAt { get; set; }
+    public Role Role { get; set; } = Role.User;
 }
