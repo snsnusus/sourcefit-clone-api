@@ -6,6 +6,7 @@ public class EmployeeResponseDto
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
     public string Gender { get; set; } = string.Empty;
+    public string? Nickname { get; set; }
     public string MaritalStatus { get; set; } = string.Empty;
     public string? OfficeLocation { get; set; }
     public string EmployeeCode { get; set; } = string.Empty;

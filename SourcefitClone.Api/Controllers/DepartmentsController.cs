@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SourcefitClone.Api.DTOs;
 using SourcefitClone.Api.Services;
@@ -6,16 +7,19 @@ namespace SourcefitClone.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class DepartmentsController(DepartmentService departmentService) : ControllerBase
+public class DepartmentsController(DepartmentService departmentService, IAuthorizationService authorizationService) : ControllerBase
 {
     private readonly DepartmentService _departmentService = departmentService;
+    private readonly IAuthorizationService _authorizationService = authorizationService;
 
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<List<DepartmentResponseDto>>> GetAll()
     {
         return Ok(await _departmentService.GetAllAsync());
     }
 
+    [Authorize]
     [HttpGet("{id}")]
     public async Task<ActionResult<DepartmentResponseDto>> GetById(int id)
     {
@@ -24,6 +28,7 @@ public class DepartmentsController(DepartmentService departmentService) : Contro
         return Ok(department);
     }
 
+    [Authorize(Roles = "Admin,SuperAdmin")]
     [HttpPost]
     public async Task<ActionResult<DepartmentResponseDto>> Create(DepartmentCreateDto dto)
     {
@@ -31,14 +36,21 @@ public class DepartmentsController(DepartmentService departmentService) : Contro
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
+    [Authorize(Roles = "Admin,SuperAdmin")]
     [HttpPut("{id}")]
     public async Task<ActionResult<DepartmentResponseDto>> Update(int id, DepartmentCreateDto dto)
     {
+        var existing = await _departmentService.GetByIdAsync(id);
+        if (existing is null) return NotFound();
+
+        var authResult = await _authorizationService.AuthorizeAsync(User, id, "DepartmentScope");
+        if (!authResult.Succeeded) return Forbid();
+
         var updated = await _departmentService.UpdateAsync(id, dto);
-        if (updated is null) return NotFound();
         return Ok(updated);
     }
 
+    [Authorize(Roles = "SuperAdmin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
