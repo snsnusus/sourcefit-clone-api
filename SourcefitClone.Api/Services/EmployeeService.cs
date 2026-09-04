@@ -8,7 +8,6 @@ namespace SourcefitClone.Api.Services;
 public class EmployeeService(AppDbContext context)
 {
     private readonly AppDbContext _context = context;
-
     public async Task<List<EmployeeResponseDto>> GetAllAsync()
     {
         return await _context.Employees
@@ -18,6 +17,7 @@ public class EmployeeService(AppDbContext context)
                 Id = e.Id,
                 FirstName = e.FirstName,
                 LastName = e.LastName,
+                Nickname = e.Nickname,
                 Gender = e.Gender,
                 MaritalStatus = e.MaritalStatus,
                 OfficeLocation = e.OfficeLocation,
@@ -26,7 +26,6 @@ public class EmployeeService(AppDbContext context)
             })
             .ToListAsync();
     }
-
     public async Task<EmployeeResponseDto?> GetByIdAsync(int id)
     {
         var employee = await _context.Employees
@@ -44,10 +43,10 @@ public class EmployeeService(AppDbContext context)
             MaritalStatus = employee.MaritalStatus,
             OfficeLocation = employee.OfficeLocation,
             EmployeeCode = employee.EmployeeCode,
-            DepartmentName = employee.Department?.Name
+            DepartmentName = employee.Department?.Name,
+            Nickname = employee.Nickname,
         };
     }
-
     public async Task<EmployeeResponseDto> CreateAsync(EmployeeCreateDto dto)
     {
         var employee = new Employee
@@ -69,7 +68,6 @@ public class EmployeeService(AppDbContext context)
         return await GetByIdAsync(employee.Id)
             ?? throw new InvalidOperationException("Failed to reload newly created employee.");
     }
-
     public async Task<EmployeeResponseDto?> UpdateAsync(int id, EmployeeUpdateDto dto)
     {
         var employee = await _context.Employees.FindAsync(id);
@@ -93,7 +91,6 @@ public class EmployeeService(AppDbContext context)
         await _context.SaveChangesAsync();
         return await GetByIdAsync(employee.Id);
     }
-
     public async Task<bool> DeleteAsync(int id)
     {
         var employee = await _context.Employees.FindAsync(id);
@@ -102,5 +99,20 @@ public class EmployeeService(AppDbContext context)
         employee.DeletedAt = DateTime.UtcNow;
         await _context.SaveChangesAsync();
         return true;
+    }
+    public async Task<EmployeeResponseDto?> UpdateSelfAsync(int employeeId, EmployeeSelfUpdateDto dto)
+    {
+        var employee = await _context.Employees.FindAsync(employeeId);
+        if (employee is null) return null;
+
+        employee.Nickname = dto.Nickname;
+
+        await _context.SaveChangesAsync();
+        return await GetByIdAsync(employee.Id);
+    }
+    public async Task<(bool Exists, int? DepartmentId)> GetExistenceAndDepartmentAsync(int id)
+    {
+        var employee = await _context.Employees.FindAsync(id);
+        return employee is null ? (false, null) : (true, employee.DepartmentId);
     }
 }
